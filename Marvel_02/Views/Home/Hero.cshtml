@@ -1,0 +1,52 @@
+﻿@model Marvel_02.Models.FromAPI.Character
+<div class="container text-center marge">
+
+    @if (Model.id != 0)
+    {
+        <img class="fff" src="@Model.thumbnail.path.@Model.thumbnail.extension" />
+        <h3>@Model.name</h3>
+        <p>@Model.description</p>
+
+        <h3>Comics</h3>
+        foreach (Marvel_02.Models.FromAPI.ComicSummary item in Model.comics.items)
+        {
+           <p>@item.name</p> 
+        }
+
+        <h3>Series</h3>
+        foreach (Marvel_02.Models.FromAPI.SeriesSummary item in Model.series.items)
+        {
+            <p>@item.name</p> 
+        }
+
+        <h3>Stories</h3>
+        foreach (Marvel_02.Models.FromAPI.StorySummary item in Model.stories.items)
+        {
+            <p>@item.name</p>
+            <p>@item.type</p>
+        }
+
+
+    }
+    else
+    {
+        <img src="~/Content/404.png" />
+    }
+</div>
+@Html.ActionLink("Retour à l'index", "Index", "Home")
+<style>
+    img
+    {
+        height : 400px;
+    }
+    p
+    {
+       font-size : medium;
+       color : cornflowerblue;
+    }
+
+    .marge
+    {
+        margin : 15px;
+    }
+</style>

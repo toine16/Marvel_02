@@ -1,0 +1,177 @@
+﻿@model Marvel_02.Models.ToView.CharacterList
+
+<img src="~/Content/marvel.jpg"/>
+<div class="top">
+
+    <img src="~/Content/loupe.png" height="26" onclick="search()" class="search">
+    <input type="search" placeholder="Entrez un mot-clef" class="search" id="search" />
+</div>
+
+<hr />
+<div class="container text-center">
+
+    @foreach (Marvel_02.Models.FromAPI.Character element in Model.items)
+    {
+        <div class="col-lg-3">
+            <img class="fff" src="@element.thumbnail.path.@element.thumbnail.extension" onclick="infos(@element.id)"/>
+            <p>@element.name</p>
+
+
+            <div id="@element.id" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close" onclick="halt(@element.id)">&times;</span>
+                    <div>
+                        <img class="fff" src="@element.thumbnail.path.@element.thumbnail.extension" id=@element.id />
+                        <h4>@element.name</h4>
+                        <h5>Comics</h5>
+                        @foreach(Marvel_02.Models.FromAPI.ComicSummary item in element.comics.items)
+                        {
+                            @item.name  
+                            @item.ressourceURI
+                        }
+
+                        <h5>Series</h5>
+                        @foreach (Marvel_02.Models.FromAPI.SeriesSummary item in element.series.items)
+                        {                           
+                            <a href="@item.resourceURI">@item.name</a>
+                        }
+
+                        <h5>Stories</h5>
+                        @foreach (Marvel_02.Models.FromAPI.StorySummary item in element.stories.items)
+                        {
+                            <a href="@item.resourceURI">@item.name - @item.type</a>
+                           // @item.type
+                        }             
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+    }
+
+</div>
+<div class="pager">
+    
+    <button onclick="precedent(@Model.page)"> Précédent </button> 
+    <h3>@Model.page</h3>
+    <button onclick="suivant(@Model.page)"> Suivant </button>
+</div>
+
+
+<style>
+
+    .center
+    {
+        margin : auto;
+        width : 100%;
+    }
+    .search 
+    {
+           float :right;
+          
+    }
+
+    .fff
+    {
+        width : 200px;
+        height : 300px;
+    }
+
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+   
+    
+</style>
+<script>
+    function offsetChanged()
+    {}
+
+    function suivant(page)
+    {    
+        if(page < 100)
+        {
+            page++;
+            document.location.href = "http://localhost:51266/Home/Index?page=" + page;
+        }
+    }
+
+    function precedent(page)
+    {
+        if(page > 1)
+        {
+            page--;
+            document.location.href = "http://localhost:51266/Home/Index?page=" + page;
+        }
+    }
+
+    function search()
+    {
+        var name = document.getElementById("search").value;
+        document.location.href = "http://localhost:51266/Home/Hero?sujet=" + name;
+    }
+
+    var modal = document.getElementById('myModal');
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    function infos(id)
+    {
+       // modal.style.display = "block";
+        document.getElementById(id).style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    function halt(id)
+    {
+        document.getElementById(id).style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
